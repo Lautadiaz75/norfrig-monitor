@@ -54,7 +54,7 @@ func printTable(items []api.OrdenItem) {
 		if len(nombre) > 35 {
 			nombre = nombre[:32] + "..."
 		}
-		fmt.Printf("%-20s %-12s %-35s %8d %8d\n",
+		fmt.Printf("%-20s %-12s %-35s %8.0f %8.0f\n",
 			item.Semaforo,
 			item.SKU,
 			nombre,

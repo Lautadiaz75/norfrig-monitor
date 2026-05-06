@@ -27,10 +27,10 @@ type OrdenItem struct {
 	Proveedor      string  `json:"proveedor"`
 	SKU            string  `json:"sku"`
 	NombreProducto string  `json:"nombre_producto"`
-	StockActual    int     `json:"stock_actual"`
+	StockActual    float64 `json:"stock_actual"`
 	AvgDiarioProy  float64 `json:"avg_diario_proy"`
 	DiasStockRest  float64 `json:"dias_stock_restante"`
-	UnidadesAPedir int     `json:"unidades_a_pedir"`
+	UnidadesAPedir float64 `json:"unidades_a_pedir"`
 	Semaforo       string  `json:"semaforo"`
 }
 
