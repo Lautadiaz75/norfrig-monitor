@@ -3,12 +3,16 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"sort"
 
 	"github.com/Lautadiaz75/norfrig-monitor/internal/api"
 	"github.com/spf13/cobra"
 )
 
-var proveedor string
+var (
+	proveedor string
+	soloUrgentes bool
+)
 
 var statusCmd = &cobra.Command{
 	Use:   "status",
@@ -18,6 +22,7 @@ var statusCmd = &cobra.Command{
 
 func init() {
 	statusCmd.Flags().StringVarP(&proveedor, "proveedor", "p", "TODOS", "Filtrar por proveedor")
+	statusCmd.Flags().BoolVarP(&soloUrgentes, "urgentes", "u", false, "Mostrar solo CRITICO y REORDEN")
 	rootCmd.AddCommand(statusCmd)
 }
 
@@ -35,6 +40,12 @@ func runStatus(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("error consultando la API: %w", err)
 	}
 
+	if soloUrgentes {
+		items = filtrarUrgentes(items)
+	}
+
+	sortPorPrioridad(items)
+
 	if len(items) == 0 {
 		fmt.Println("No hay SKUs para mostrar.")
 		return nil
@@ -42,6 +53,33 @@ func runStatus(cmd *cobra.Command, args []string) error {
 
 	printTable(items)
 	return nil
+}
+
+// filtrarUrgentes devuelve solo los items con semáforo CRITICO o REORDEN.
+func filtrarUrgentes(items []api.OrdenItem) []api.OrdenItem {
+	resultado := []api.OrdenItem{}
+	for _, item := range items {
+		if item.Semaforo == "CRITICO" || item.Semaforo == "REORDEN" {
+			resultado = append(resultado, item)
+		}
+	}
+	return resultado
+}
+
+// sortPorPrioridad ordena: CRITICO primero, luego REORDEN, luego el resto.
+func sortPorPrioridad(items []api.OrdenItem) {
+	orden := map[string]int{
+		"CRITICO": 0,
+		"REORDEN": 1,
+	}
+	sort.SliceStable(items, func(i, j int) bool {
+		pi := orden[items[i].Semaforo]
+		pj := orden[items[j].Semaforo]
+		if pi != pj {
+			return pi < pj
+		}
+		return items[i].UnidadesAPedir > items[j].UnidadesAPedir
+	})
 }
 
 func printTable(items []api.OrdenItem) {
