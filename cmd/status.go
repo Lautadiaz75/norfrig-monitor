@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/lautarodiaz/norfrig-monitor/internal/api"
+	"github.com/Lautadiaz75/norfrig-monitor/internal/api"
 	"github.com/spf13/cobra"
 )
 

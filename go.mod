@@ -1,4 +1,4 @@
-module github.com/lautarodiaz/norfrig-monitor
+module github.com/Lautadiaz75/norfrig-monitor
 
 go 1.26.2
 
