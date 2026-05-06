@@ -1,0 +1,9 @@
+# Binario compilado
+norfrig-monitor.exe
+norfrig-monitor
+
+# Variables de entorno
+.env
+
+# Caché del compilador de Go
+/vendor/
