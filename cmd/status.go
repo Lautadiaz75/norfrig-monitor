@@ -68,13 +68,19 @@ func filtrarUrgentes(items []api.OrdenItem) []api.OrdenItem {
 
 // sortPorPrioridad ordena: CRITICO primero, luego REORDEN, luego el resto.
 func sortPorPrioridad(items []api.OrdenItem) {
-	orden := map[string]int{
-		"CRITICO": 0,
-		"REORDEN": 1,
+	prioridad := func(semaforo string) int {
+		switch semaforo {
+		case "CRITICO":
+			return 0
+		case "REORDEN":
+			return 1
+		default:
+			return 99
+		}
 	}
 	sort.SliceStable(items, func(i, j int) bool {
-		pi := orden[items[i].Semaforo]
-		pj := orden[items[j].Semaforo]
+		pi := prioridad(items[i].Semaforo)
+		pj := prioridad(items[j].Semaforo)
 		if pi != pj {
 			return pi < pj
 		}
